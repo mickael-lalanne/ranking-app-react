@@ -7,11 +7,8 @@ const RankingGrid = ({ items, imgArr, drag, allowDrop, drop}) => {
     const cellCollectionWorst = [];
 
     function pushCellMarkupToArr(cellCollection, rankNum, rowLabel) {
-        console.log('#pushCellMarkupToArr#');
-        console.log(items);
         if (rankNum > 0) {
             let item = items.find(i => i.ranking === rankNum);
-            console.log(item);
             cellCollection.push(<div id={`rank-${rankNum}`} onDrop={drop} onDragOver={allowDrop} className="rank-cell">
                 {item != null ? <img id={`item-${item.id}`} src={imgArr.find(i => i.id === item.imageId)?.image} draggable="true" onDragStart={drag} />
                                : null}
