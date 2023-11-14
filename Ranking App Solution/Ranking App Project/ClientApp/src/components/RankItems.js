@@ -5,7 +5,7 @@ const RankItems = () => {
     const dataType = 1;
 
     useEffect(() => {
-        fetch(`items/${dataType}`)
+        fetch(`item/${dataType}`)
             .then(results => {
                 return results.json();
             })
@@ -17,8 +17,10 @@ const RankItems = () => {
     return (
         <main>
             {
-                (items !== null) ? items.map(item => <h3>{ item.title }</h3>) : <div>Loading...</div>
+                (items.length > 0) ? items.map(item => <h3>{item.title}</h3>) : <div>Loading...</div>
             }
         </main>
     )
 }
+
+export default RankItems;
