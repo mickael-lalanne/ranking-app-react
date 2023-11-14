@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import movieImageArr from './MovieImages';
 import RankingGrid from './RankingGrid';
+import ItemCollection from './ItemCollection';
 
 const RankItems = () => {
     const [items, setItems] = useState([]);
@@ -16,22 +17,45 @@ const RankItems = () => {
             })
     }, []);
 
+    function drag(ev) {
+        ev.dataTransfer.setData('text', ev.target.id);
+    };
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+
+        const targetElt = ev.target;
+
+        if (targetElt.nodeName === 'IMG') {
+            return false;
+        }
+
+        if (targetElt.childNodes.length === 0) {
+            let data = parseInt(ev.dataTransfer.getData('text').substring(5));
+            const transformedCollection = items.map(item => item.id === parseInt(data)
+                ? { ...item, ranking: parseInt(targetElt.id.substring(5)) }
+                : { ...item, ranking: item.ranking }
+            );
+
+            setItems(transformedCollection);
+        }
+    }
+
     return (
         <main>
-            <RankingGrid items={items} imgArr={movieImageArr} />
+            <RankingGrid
+                items={items}
+                imgArr={movieImageArr}
+                drag={drag}
+                allowDrop={allowDrop}
+                drop={drop}
+            />
 
-            <div className="items-not-ranked">
-            {
-                    (items.length > 0) ? items.map(item =>
-                        <div className="unranked-cell">
-                            <img
-                                id={`item-${item.id}`}
-                                src={movieImageArr.find(movie => movie.id === item.imageId)?.image}
-                            ></img>
-                        </div>
-                    ) : <div>Loading...</div>
-            }
-            </div>
+            <ItemCollection items={items} drag={drag} imgArr={movieImageArr} />
         </main>
     )
 }
